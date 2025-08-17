@@ -125,6 +125,10 @@ class WikiModule(Component):
         page = WikiPage(self.env, pagename)
         versioned_page = WikiPage(self.env, pagename, version)
 
+        # 로그인하지 않은 사용자를 로그인 페이지로 리다이렉트
+        if not req.is_authenticated:
+            req.redirect(req.href.login(referer=req.path_info))
+
         req.perm(versioned_page.resource).require('WIKI_VIEW')
 
         if version and versioned_page.version != version:
